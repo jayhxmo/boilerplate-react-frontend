@@ -1,0 +1,129 @@
+@function strip-unit($number) {
+    @if type-of($number) == 'number' and not unitless($number) {
+        @return $number / ($number * 0 + 1);
+    }
+
+    @return $number;
+}
+
+@function get-vw($target) {
+    $vw-context: strip-unit(($base-sizing * 0.01) * 1px);
+    @return (strip-unit($target) / $vw-context) * 1vw;
+}
+
+@function get-vh($target) {
+    $vh-context: strip-unit(($base-height * 0.01) * 1px);
+    @return (strip-unit($target) / $vh-context) * 1vh;
+}
+
+// deprecate Ueno's responsive font mixin
+// nah let's keep this
+@mixin responsive-font(
+    $min-size: (
+        $font-size - 2
+    ),
+    $size: $font-size,
+    $limit: $max-width
+) {
+    $baseline: $default-width;
+    $font-multiplier: (($size - $min-size) / (strip-unit($limit) - strip-unit($baseline)));
+    $font-baseline: ($min-size - $font-multiplier * strip-unit($baseline));
+    @if $min-size>=$size {
+        @warn 'Responsive font: min-size equal or greater than size';
+    }
+    font-size: #{$min-size}px;
+    font-size: calc(#{$min-size}px * #{var(--scale-multiplier)});
+    @media (min-width: $baseline) {
+        font-size: #{$min-size}px;
+        font-size: calc(
+            (#{$font-multiplier} * #{100vw} + (#{$font-baseline}px)) * #{var(--scale-multiplier)}
+        );
+    }
+    @media (min-width: $limit) {
+        font-size: #{$size}px;
+        font-size: calc(#{$size}px * #{var(--scale-multiplier)});
+    }
+}
+
+@function spx($size) {
+    // @return $size;
+
+    $fs: strip-unit($size);
+    @return ($fs / 16) * 1rem;
+}
+
+// html.js / html.no-js will not compile?!
+// hence these workaround selectors
+@mixin js-only {
+    html:not(:global(.no-js)) & {
+        @content;
+    }
+}
+
+@mixin no-js {
+    html:not(:global(.js)) & {
+        @content;
+    }
+}
+
+@mixin flexbox() {
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+
+@mixin inline-flexbox() {
+    display: -inline-webkit-box;
+    display: -inline-moz-box;
+    display: -inline-ms-flexbox;
+    display: -inline-webkit-flex;
+    display: inline-flex;
+}
+
+@mixin flex($values) {
+    -webkit-box-flex: $values;
+    -moz-box-flex: $values;
+    -webkit-flex: $values;
+    -ms-flex: $values;
+    flex: $values;
+}
+
+@mixin transform($value) {
+    -webkit-transform: $value; // Ch <36, Saf 5.1+, iOS < 9.2, An =<4.4.4
+    -ms-transform: $value; // IE 9
+    transform: $value; // IE 10, Fx 16+, Op 12.1+
+}
+
+@mixin transform-origin($value) {
+    -webkit-transform-origin: $value; // Ch <36, Saf 5.1+, iOS < 9.2, An =<4.4.4
+    -ms-transform-origin: $value; // IE 9
+    transform-origin: $value; // IE 10, Fx 16+, Op 12.1+
+}
+
+@mixin transition($property: all, $value: $transition-enter) {
+    -webkit-transition: $property $value cubic-bezier(0.64, 0.04, 0.35, 1);
+    -moz-transition: $property $value cubic-bezier(0.64, 0.04, 0.35, 1);
+    -ms-transition: $property $value cubic-bezier(0.64, 0.04, 0.35, 1);
+    -o-transition: $property $value cubic-bezier(0.64, 0.04, 0.35, 1);
+    transition: $property $value cubic-bezier(0.64, 0.04, 0.35, 1);
+}
+
+@mixin vertical-container {
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+@mixin vertical-container__center {
+    position: relative;
+    top: 50%;
+    @include transform(translateY(-50%));
+}
+
+@mixin no-user-select {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
