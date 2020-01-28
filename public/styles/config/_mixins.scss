@@ -45,11 +45,28 @@
     }
 }
 
+
 @function spx($size) {
     // @return $size;
-
     $fs: strip-unit($size);
     @return ($fs / 16) * 1rem;
+}
+
+@function interpolate($mobile-size, $desktop-size, $mobile-viewport: $min-tablet, $desktop-viewport: $min-desktop) {
+    // @return ($desktop-size - $mobile-size) / ($min-desktop - $min-tablet) * 100vw;
+    $period: strip-unit($desktop-viewport) - strip-unit($mobile-viewport);
+    $scaleFactor: strip-unit($desktop-size - $mobile-size) / $period;
+    // $currentViewport: calc(100vw - spx($mobile-viewport));
+
+    // @if type-of($mobile-size) == 'number' and not unitless($mobile-size) {
+    //     @return calc(#{spx($mobile-size)} + #{$scaleFactor} * (100vw - #{$mobile-viewport}));
+    // }
+
+    @return calc(#{spx($mobile-size)} + #{$scaleFactor} * (100vw - #{$mobile-viewport}));
+    // @return calc(#{$mobile-size} + #{$scaleFactor} * (100vw - #{$mobile-viewport}));
+
+    // 16 + 8 / (1024 - 720) * (100vw - 720)
+    // @return calc(#{$mobile-size} + #{spx($desktop-size - $mobile-size)} / (100vw - #{spx($mobile-viewport)}));
 }
 
 // html.js / html.no-js will not compile?!

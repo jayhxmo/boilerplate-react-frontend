@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 import { Switch, BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import { TransitionGroup, Transition } from 'react-transition-group';
-import _ from 'underscore';
 
 require('../styles/styles.scss');
 

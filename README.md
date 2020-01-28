@@ -1,1 +1,1 @@
-# dylan-mullins
+# React Front-end Boilerplate
