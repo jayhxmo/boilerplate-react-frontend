@@ -33,7 +33,7 @@ export default class Index extends React.Component {
 	RouteApp = ({ location }) => {
 		this.location = location;
 
-		return <>Dylan Mullins</>;
+		return <>React Front-end Boilerplate</>;
 	};
 
 	render() {
